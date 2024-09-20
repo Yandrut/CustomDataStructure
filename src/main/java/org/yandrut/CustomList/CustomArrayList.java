@@ -1,32 +1,33 @@
 package org.yandrut.CustomList;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class CustomArrayList<T> implements CustomList<T> {
-    private T[] myArrayList;
+    private T[] arrayList;
     private int size;
 
     public CustomArrayList() {
-        myArrayList = (T[]) new Object[10];
+        arrayList = (T[]) new Object[10];
         size = 0;
     }
 
     @Override
     public void add(T t) {
-        if (size == myArrayList.length) {
+        if (size == arrayList.length) {
             T[] temporaryArray = (T[]) new Object[size + size / 3];
             for (int i = 0; i < size(); i++) {
-                temporaryArray[i] = myArrayList[i];
+                temporaryArray[i] = arrayList[i];
             }
-            myArrayList = temporaryArray;
+            arrayList = temporaryArray;
         }
-        myArrayList[size] = t;
+        arrayList[size] = t;
         size++;
     }
 
     @Override
     public T get(int index) {
-        checkOutOfBounds(index);
-            return myArrayList[index];
+        throwIfIndexOutOfBounds(index);
+            return arrayList[index];
     }
 
     @Override
@@ -37,7 +38,7 @@ public class CustomArrayList<T> implements CustomList<T> {
     @Override
     public boolean contains(Object toFind) {
         for (int i = 0; i < size; i++) {
-            if (myArrayList[i].equals(toFind)) {
+            if (arrayList[i].equals(toFind)) {
                 return true;
             }
         }
@@ -46,14 +47,14 @@ public class CustomArrayList<T> implements CustomList<T> {
 
     @Override
     public T remove(int index) {
-       checkOutOfBounds(index);
-        T removedObject = myArrayList[index];
+       throwIfIndexOutOfBounds(index);
+        T removedObject = arrayList[index];
 
         if (index == size - 1) {
             size--;
         } else {
             for (int i = index; i < size - 1; i++) {
-                myArrayList[i] = myArrayList[i + 1];
+                arrayList[i] = arrayList[i + 1];
             }
             size--;
         }
@@ -63,7 +64,7 @@ public class CustomArrayList<T> implements CustomList<T> {
     @Override
     public boolean remove(Object object) {
         if (this.contains(object)) {
-            remove(indexOf(object));
+            this.remove(indexOf(object));
             return true;
         }
         return false;
@@ -72,7 +73,7 @@ public class CustomArrayList<T> implements CustomList<T> {
     @Override
     public int indexOf(Object object) {
         for (int i = 0; i < size; i++) {
-            if (myArrayList[i].equals(object)) {
+            if (this.arrayList[i].equals(object)) {
                 return i;
             }
         }
@@ -89,13 +90,13 @@ public class CustomArrayList<T> implements CustomList<T> {
         if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
         }
-        myArrayList[index] = element;
+        arrayList[index] = element;
         return element;
     }
 
     @Override
     public boolean addAll(CustomList<T> list) {
-        if (list != null) {
+        if (Objects.nonNull(list)) {
             for (int i = 0; i < list.size(); i++) {
                 this.add(list.get(i));
             }
@@ -103,7 +104,7 @@ public class CustomArrayList<T> implements CustomList<T> {
         }
         return false;
     }
-    private void checkOutOfBounds(int index) {
+    private void throwIfIndexOutOfBounds(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
         }
@@ -124,7 +125,7 @@ public class CustomArrayList<T> implements CustomList<T> {
 
         @Override
         public T next() {
-            return myArrayList[index++];
+            return arrayList[index++];
         }
     }
 }
